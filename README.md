@@ -20,7 +20,8 @@ Per ogni funzionalità, è possibile lanciare lo script in due modalità distint
 **Elenco delle funzionalità**
 
 - `SingleMail`: Consente di inviare una mail definendo i parametri nel file mail_params.ini (utile per test).
-- `QueueMail`:  Consente di inviare mail per ogni record della tabella PostgreSQL prelevando i parametri (Recipient, Subject, body, cc, attachments..) dal DB e i parametri del servizio mail di invio da mail_service.ini. Tramite trigger sul DB può essere popolata la tabella e tramite job schedulati il servizio invia le mail e aggiorna lo stato nella tabella.
+- `QueueMail`:  Consente di inviare mail per ogni record della tabella PostgreSQL prelevando i parametri (Recipient, Subject, body, cc, attachments..) dal DB e i parametri del servizio mail di invio da mail_service.ini. Tramite trigger sul DB può essere popolata la tabella e tramite job schedulati il servizio invia le mail e aggiorna lo stato nella tabella
+- `Test`:       Consente di effettuare test di connessione al DBMS e dei parametri SMTP
 
 ### Struttura delle cartelle
 
@@ -96,6 +97,7 @@ I comandi possono necessitare di filtri
 |-------------------------------|------------------|
 | SingleMail                    | -p               |
 | QueueMail                     | -q               |
+| Test                          | -t               |
 
 Esempi:
 
@@ -107,6 +109,18 @@ php sync.php -prod -p
 ```ìni
 php sync.php -prod -q
 ```
+**Test**
+```ìni
+php sync.php -test -t
+```
+
 ### Logs
 
 Lo script ad ogni esecuzione aggiornerà un di file log nel percorso `/Logs/[anno]/[mese]/` denominato `{comando}.log`.
+I log per i test sono in modalità verbosa visualizzabile sia su termninale che su errors.log
+Con i comando `-t` puoi ricevere i seguenti errori:
+| **SERVIZIO**                  | **PARAMETRO**           | **ERORRE**                        |
+|-------------------------------|-------------------------|-----------------------------------|
+| SMTP                          |host, auth, secure, port | "Timeout o host non raggiungibile"|
+| SMTP                          |user, password           | "Could not authenticate"          |
+| DBMS                          |                         | SQL STATEMENT errror              |
